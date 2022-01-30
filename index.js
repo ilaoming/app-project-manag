@@ -17,14 +17,30 @@ app.get('/service-order', (req,res) =>{
 
         //Query SQL
         const query = `
-         SELECT * FROM
-         service_order
-         INNER JOIN
-         product
-         WHERE 
-         product.order_id = service_order.id
+        SELECT 
+          service_order.id,
+          entity_name,
+          s_date,
+          e_date,
+          e_days,
+          p_days,
+          phone,
+          mail,
+          delivery_address,
+          assignee_name,
+          product.name AS product_name,
+          service_state.name AS state,
+          product.quantity AS quantity,
+          product.quantity * product.price AS total
+        FROM
+          service_order
+        INNER JOIN
+          product , service_state
+        WHERE 
+          product.order_id = service_order.id
+        AND
+          service_state.id = service_order.state_id
         `
-
 
         // Use the connection
         connection.query(query, function (error, results, fields) {
