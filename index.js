@@ -15,14 +15,13 @@ app.get('/product', (req,res) =>{
         // Use the connection
         connection.query('SELECT * FROM product', function (error, results, fields) {
           // When done with the connection, release it.
+          connection.release();
        
           // Handle error after the release.
           if (error) throw error;
 
           //results
           res.json(results);
-
-          connection.release();
         });
     });
 })
