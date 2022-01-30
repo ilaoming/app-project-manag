@@ -28,8 +28,8 @@ app.get('/service-order', (req,res) =>{
           mail,
           delivery_address,
           assignee_name,
-          product.name AS product_name,
           service_state.name AS state,
+          product.name AS product_name,
           product.quantity AS quantity,
           product.quantity * product.price AS total
         FROM
