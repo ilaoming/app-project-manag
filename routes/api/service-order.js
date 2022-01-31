@@ -1,13 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const pool = require('../../mysql')
 
-//GET all service order
+// GET methods
+// -------------------------------------------------------------------------------------------------------------------------------------
+
+
+// GET all service order
 router.get('/service-order', (req,res) =>{
     pool.getConnection(function(err, connection) {
         if (err) throw err; // not connected!
 
-        //Query SQL
+        // Query SQL
         const query = `
         SELECT 
           service_order.id,
@@ -43,7 +47,7 @@ router.get('/service-order', (req,res) =>{
           // Handle error after the release.
           if (error) throw error;
 
-          //Data processing
+          // Data processing
           service_order = []
           end_service_order = undefined
 
@@ -75,20 +79,24 @@ router.get('/service-order', (req,res) =>{
             })
           });
 
-          //results
+          // results
           res.json(service_order);
         });
     });
 });
 
-//GET service order by id
+
+// -------------------------------------------------------------------------------------------------------------------------------------
+
+
+// GET service order by id
 router.get('/service-order/:id', (req,res) =>{
     pool.getConnection(function(err, connection) {
         if (err) throw err; // not connected!
 
         const id = req.params.id;
 
-        //Query SQL
+        // Query SQL
         const query = `
         SELECT 
           service_order.id,
@@ -120,13 +128,14 @@ router.get('/service-order/:id', (req,res) =>{
 
         // Use the connection
         connection.query(query, function (error, results, fields) {
+
           // When done with the connection, release it.
           connection.release();
        
           // Handle error after the release.
           if (error) throw error;
 
-          //Data processing
+          // Data processing
           if (results.length > 0) {
             service_order = []
             end_service_order = undefined
@@ -159,12 +168,12 @@ router.get('/service-order/:id', (req,res) =>{
               })
             });
 
-            //results
+            // results
             res.json(service_order);
 
           }else{
 
-            //errors
+            // errors
             res.status(404)
             res.send({
                 errors:[
@@ -176,4 +185,79 @@ router.get('/service-order/:id', (req,res) =>{
     });
 });
 
-module.exports = router
+
+//POST methods
+// -------------------------------------------------------------------------------------------------------------------------------------
+
+router.post('/service-order',(req,res)=>{
+
+  pool.getConnection(function (err,connection) { 
+
+    if(err) throw err // Not connected!
+
+      const id = req.body.id
+      const entity_name = req.body.entity_name
+      const s_date = req.body.s_date
+      const e_date = req.body.e_date
+      const e_days = req.body.e_days
+      const p_days = req.body.p_days
+      const phone = req.body.phone
+      const mail = req.body.mail
+      const delivery_address = req.body.delivery_address
+      const assignee_name = req.body.assignee_name
+      const state_id = req.body.state_id
+    
+
+        // Query SQL
+        const query = `
+        INSERT INTO
+          service_order
+          (
+            id,
+            entity_name,
+            s_date,
+            e_date,
+            e_days,
+            p_days,
+            phone,
+            mail,
+            delivery_address,
+            assignee_name,
+            state_id
+          )
+        VALUES
+          (
+            ${connection.escape(id)},
+            ${connection.escape(entity_name)},
+            ${connection.escape(s_date)},
+            ${connection.escape(e_date)},
+            ${connection.escape(e_days)},
+            ${connection.escape(p_days)},
+            ${connection.escape(phone)},
+            ${connection.escape(mail)},
+            ${connection.escape(delivery_address)},
+            ${connection.escape(assignee_name)},
+            ${connection.escape(state_id)}
+          )
+        `
+        //Use connection
+        connection.query(query,function (error,results,fields) { 
+
+          // When done with the connection, release it.
+          connection.release;
+
+          // Handle error after the release.
+          if(error) throw error;
+
+          // Response
+          res.status(200)
+          res.send('Success')
+
+         })
+
+   })
+
+})
+
+
+module.exports = router;
