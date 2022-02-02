@@ -1,0 +1,19 @@
+.logo{
+    width: 50% ;
+}
+
+body{
+    background-color:rgb(190, 218, 243);
+}
+
+.margin{
+    margin-top: 12rem !important;
+}
+
+.style-container{
+    background-color: azure;
+    padding: 3rem !important;
+    border-radius: 1rem !important;
+}
+
+

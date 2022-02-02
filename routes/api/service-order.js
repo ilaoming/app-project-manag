@@ -101,8 +101,8 @@ router.get('/service-order/:id', (req,res) =>{
         SELECT 
           service_order.id,
           entity_name,
-          s_date,
-          e_date,
+          DATE('s_date') AS s_date,
+          DATE('e_date') AS e_date,
           e_days,
           p_days,
           phone,

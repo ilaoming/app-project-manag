@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const service_state = require('./routes/api/service-state')
 const service_order = require('./routes/api/service-order')
 const product = require('./routes/api/product')
-
+const allow_cross_domain = require('./allowCrossDomain')
 const PORT = process.env.PORT || 3000;
 
 
@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(allow_cross_domain)
 app.use(service_state)
 app.use(service_order)
 app.use(product)
